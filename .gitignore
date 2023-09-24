@@ -1,5 +1,7 @@
 # Virtual environments
 csc2125/
+# Pretrained paths
+albumy/pretrained/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
