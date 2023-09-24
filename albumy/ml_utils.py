@@ -24,7 +24,7 @@ def get_ml_tags(image_path, image_size=384, threshold=0.68, model_type='RAM'):
 
     # If pretrained weights do not exist, download them:
     cwd = os.getcwd()
-    pretrained_dir_path = os.path.join(cwd, 'pretrained')
+    pretrained_dir_path = os.path.join(cwd, 'albumy', 'pretrained')
     if not os.path.exists(pretrained_dir_path):
         os.mkdir(pretrained_dir_path)
     pretrained_path = os.path.join(pretrained_dir_path, pretrained_path)
@@ -71,9 +71,3 @@ def get_ml_tags(image_path, image_size=384, threshold=0.68, model_type='RAM'):
     # print("Tags: ", tags)
     
     return tags
-
-'''
-if __name__ == '__main__':
-    test_image_path = 'C:/Users/Jay/Documents/phd/csc2125/CSC2125_2023/uploads/70ff8f4a3612431ab58d9509e19075d2.jpg'
-    get_ml_tags(test_image_path)
-'''

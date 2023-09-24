@@ -46,9 +46,20 @@ This project is licensed under the MIT License (see the
 ## Notes on Assignment 1 work:
 - Functions for updating description/tags seems to be in albumy/blueprints/main.py
 - Seems like in the upload() function of albumy/blueprints/main.py, we can change the description and the tags using the Photo class intiailization. This class is defined in albumy/models.py
+- Note to Maxx from Jay: 
+    - I used Python 3.11.5, most of the ML code is in albumy/ml_utils.py, with the integration of the ML in albumy/blueprints/main.py
+    - The first run might take a while because the code will download the pretrained weights for the tagging model if they aren't already available locally
 
 ## Notes on preparing recognize anything model (model used for tagging and/or captioning):
 - https://github.com/xinyu1205/recognize-anything
 - Have to run: pip install git+https://github.com/xinyu1205/recognize-anything.git
     - But requires rust to work, install using: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 - Running the code to install the pretrained model weights requires wget to be installed
+## How to test assignment 1 code:
+1.Activate the virtual environment
+2. Run `flask forge`
+3. Run `flask run`
+4. Go to the shown link
+5. Login using the test account above
+6. Click the upload icon next to the notifications icon
+7. Upload an image
