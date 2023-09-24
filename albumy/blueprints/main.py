@@ -127,9 +127,6 @@ def upload():
         filename_s = resize_image(f, filename, current_app.config['ALBUMY_PHOTO_SIZE']['small'])
         filename_m = resize_image(f, filename, current_app.config['ALBUMY_PHOTO_SIZE']['medium'])
 
-        # Get tags using ML model
-        tags = get_ml_tags(filename)
-
         photo = Photo(
             filename=filename,
             filename_s=filename_s,
@@ -138,6 +135,24 @@ def upload():
         )
         db.session.add(photo)
         db.session.commit()
+
+        # Get tags using ML model
+        try:
+            tags = get_ml_tags(os.path.join(current_app.config['ALBUMY_UPLOAD_PATH'], filename))
+        except Exception as e:
+            print(e)
+
+        # Adding tags to photo
+        for tag_name in tags:
+            tag = Tag.query.filter_by(name=tag_name).first() # Look to see if tag already exists in database
+            if tag is None:
+                # Create new tag and add it to database
+                tag = Tag(name=tag_name)
+                db.session.add(tag)
+                db.session.commit()
+            photo.tags.append(tag)
+            db.session.commit()
+
     return render_template('main/upload.html')
 
 
