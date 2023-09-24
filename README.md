@@ -45,7 +45,7 @@ This project is licensed under the MIT License (see the
 
 ## Notes on Assignment 1 work:
 - Functions for updating description/tags seems to be in albumy/blueprints/main.py
-- Seems like in the upload() function of albumy/blueprints/main.py, we can change the description and the tags using the Photo class intiailization. This class is defined in albumy/albumy/models.py
+- Seems like in the upload() function of albumy/blueprints/main.py, we can change the description and the tags using the Photo class intiailization. This class is defined in albumy/models.py
 
 ## Notes on preparing recognize anything model (model used for tagging and/or captioning):
 - https://github.com/xinyu1205/recognize-anything
