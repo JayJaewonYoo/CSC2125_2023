@@ -74,7 +74,8 @@ def resize_image(image, filename, base_width):
         return filename + ext
     w_percent = (base_width / float(img.size[0]))
     h_size = int((float(img.size[1]) * float(w_percent)))
-    img = img.resize((base_width, h_size), PIL.Image.ANTIALIAS)
+    # img = img.resize((base_width, h_size), PIL.Image.ANTIALIAS) # Pilllow version < 10.0.0
+    img = img.resize((base_width, h_size), PIL.Image.LANCZOS) # Pillow version >- 10.0.0
 
     filename += current_app.config['ALBUMY_PHOTO_SUFFIX'][base_width] + ext
     img.save(os.path.join(current_app.config['ALBUMY_UPLOAD_PATH'], filename), optimize=True, quality=85)
