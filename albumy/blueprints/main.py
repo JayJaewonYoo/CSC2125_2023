@@ -18,6 +18,7 @@ from albumy.forms.main import DescriptionForm, TagForm, CommentForm
 from albumy.models import User, Photo, Tag, Follow, Collect, Comment, Notification
 from albumy.notifications import push_comment_notification, push_collect_notification
 from albumy.utils import rename_image, resize_image, redirect_back, flash_errors
+from albumy.ml_utils import get_ml_tags
 
 main_bp = Blueprint('main', __name__)
 
@@ -125,6 +126,10 @@ def upload():
         f.save(os.path.join(current_app.config['ALBUMY_UPLOAD_PATH'], filename))
         filename_s = resize_image(f, filename, current_app.config['ALBUMY_PHOTO_SIZE']['small'])
         filename_m = resize_image(f, filename, current_app.config['ALBUMY_PHOTO_SIZE']['medium'])
+
+        # Get tags using ML model
+        tags = get_ml_tags(filename)
+
         photo = Photo(
             filename=filename,
             filename_s=filename_s,

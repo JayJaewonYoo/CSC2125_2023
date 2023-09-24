@@ -68,8 +68,12 @@ def get_ml_tags(image_path, image_size=384, threshold=0.68, model_type='RAM'):
         # print("User Specified Tags: ", res[1])
         # print("Image Caption: ", res[2])
     tags = res[0].split(" | ") # Both model types have tags at 0th index
-    print("Tags: ", tags)
+    # print("Tags: ", tags)
+    
+    return tags
 
+'''
 if __name__ == '__main__':
     test_image_path = 'C:/Users/Jay/Documents/phd/csc2125/CSC2125_2023/uploads/70ff8f4a3612431ab58d9509e19075d2.jpg'
     get_ml_tags(test_image_path)
+'''
