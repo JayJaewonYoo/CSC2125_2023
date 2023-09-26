@@ -43,12 +43,10 @@ Test account:
 This project is licensed under the MIT License (see the
 [LICENSE](LICENSE) file for details).
 
-## Notes on Assignment 1 work:
-- Functions for updating description/tags seems to be in albumy/blueprints/main.py
-- Seems like in the upload() function of albumy/blueprints/main.py, we can change the description and the tags using the Photo class intiailization. This class is defined in albumy/models.py
-- Note to Maxx from Jay: 
-    - I used Python 3.11.5, most of the ML code is in albumy/ml_utils.py, with the integration of the ML in albumy/blueprints/main.py
-    - The first run might take a while because the code will download the pretrained weights for the tagging model if they aren't already available locally
+## Some possible assignment 1 todos:
+- Update description generation code to initialize on startup rather than on each upload
+- Remove the need for the ram library and write code to run it on pytorch directly
+    - The reason for this is that there seems to be some dependency conflicts because ram wants an earlier version of transformers than is required for the description model
 
 ## Notes on preparing recognize anything model (model used for tagging and/or captioning):
 - https://github.com/xinyu1205/recognize-anything
@@ -57,6 +55,7 @@ This project is licensed under the MIT License (see the
 - Running the code to install the pretrained model weights requires wget to be installed
 ## installing hugging face transformers for description generation:
 - pip install git+https://github.com/huggingface/transformers
+- Note may have to use --upgrade to ensure that latest version is being used
 ## How to test assignment 1 code:
 1.Activate the virtual environment
 2. Run `flask forge`

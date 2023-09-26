@@ -127,11 +127,11 @@ def upload():
         filename_m = resize_image(f, filename, current_app.config['ALBUMY_PHOTO_SIZE']['medium'])
 
         # Get tags and description using ML model
-        try:
-            tags = get_ml_tags(os.path.join(current_app.config['ALBUMY_UPLOAD_PATH'], filename))
-            description = get_ml_descriptions(os.path.join(current_app.config['ALBUMY_UPLOAD_PATH'], filename))
-        except Exception as e:
-            print("tags",e)
+        # try:
+        tags = get_ml_tags(os.path.join(current_app.config['ALBUMY_UPLOAD_PATH'], filename))
+        description = get_ml_descriptions(os.path.join(current_app.config['ALBUMY_UPLOAD_PATH'], filename))
+        # except Exception as e:
+            # print(e)
 
         photo = Photo(
             description=description,
