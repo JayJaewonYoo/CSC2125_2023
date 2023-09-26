@@ -10,11 +10,11 @@ from ram import inference_tag2text
 from ram import get_transform
 
 from transformers import AutoProcessor, AutoModelForCausalLM
+from flask import current_app
 
 # Based on https://github.com/xinyu1205/recognize-anything/blob/main/inference_tag2text.py
 
-
-def get_ml_tags(image_path, image_size=384, threshold=0.68, model_type='RAM'):
+def initialize_tagging_model(image_size=384, threshold=0.68, model_type='RAM'):
     # Regarding image_size default: help message says 448 but code says 384
     if model_type not in ['RAM', 'tag2text']:
         raise ValueError('model_type argument must be RAM or tag2text')
@@ -42,9 +42,6 @@ def get_ml_tags(image_path, image_size=384, threshold=0.68, model_type='RAM'):
                                    shell=True)
         exit_codes = process.wait()
 
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    transform = get_transform(image_size=image_size)
-
     if model_type == 'RAM':
         model = ram(pretrained=pretrained_path,
                     image_size=image_size,
@@ -56,8 +53,21 @@ def get_ml_tags(image_path, image_size=384, threshold=0.68, model_type='RAM'):
                          vit='swin_b',
                          delete_tag_index=delete_tag_index)
         model.threshold = threshold
-
+    
     model.eval()
+
+    transform = get_transform(image_size=image_size)
+
+    return model, transform, model_type
+
+def get_ml_tags(image_path):
+
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    model = current_app.config['tag_model']
+    transform = current_app.config['tag_model_transformer']
+    model_type = current_app.config['tag_model_type']
+
+    # model.eval()
     model = model.to(device)
     image = transform(Image.open(image_path)).unsqueeze(0).to(device)
     if model_type == 'RAM':
@@ -70,7 +80,6 @@ def get_ml_tags(image_path, image_size=384, threshold=0.68, model_type='RAM'):
         # print("User Specified Tags: ", res[1])
         # print("Image Caption: ", res[2])
     tags = res[0].split(" | ") # Both model types have tags at 0th index
-    # print("Tags: ", tags)
     
     return tags
 

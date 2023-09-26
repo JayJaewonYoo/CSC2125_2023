@@ -22,7 +22,6 @@ from albumy.ml_utils import get_ml_tags, get_ml_descriptions
 
 main_bp = Blueprint('main', __name__)
 
-
 @main_bp.route('/')
 def index():
     if current_user.is_authenticated:

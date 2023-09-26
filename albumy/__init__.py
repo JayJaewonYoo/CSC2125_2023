@@ -8,7 +8,7 @@
 import os
 
 import click
-from flask import Flask, render_template
+from flask import Flask, render_template, current_app
 from flask_login import current_user
 from flask_wtf.csrf import CSRFError
 
@@ -20,7 +20,7 @@ from albumy.blueprints.user import user_bp
 from albumy.extensions import bootstrap, db, login_manager, mail, dropzone, moment, whooshee, avatars, csrf
 from albumy.models import Role, User, Photo, Tag, Follow, Notification, Comment, Collect, Permission
 from albumy.settings import config
-
+from albumy.ml_utils import initialize_tagging_model
 
 def create_app(config_name=None):
     if config_name is None:
@@ -36,6 +36,14 @@ def create_app(config_name=None):
     register_errorhandlers(app)
     register_shell_context(app)
     register_template_context(app)
+
+    # Initialize tagging model at startup
+        # Based on: https://stackoverflow.com/a/68007730
+    with app.app_context():
+        tag_model, tag_model_transformer, tag_model_type = initialize_tagging_model()
+        current_app.config['tag_model'] = tag_model
+        current_app.config['tag_model_transformer'] = tag_model_transformer
+        current_app.config['tag_model_type'] = tag_model_type
 
     return app
 
