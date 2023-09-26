@@ -18,7 +18,7 @@ from albumy.forms.main import DescriptionForm, TagForm, CommentForm
 from albumy.models import User, Photo, Tag, Follow, Collect, Comment, Notification
 from albumy.notifications import push_comment_notification, push_collect_notification
 from albumy.utils import rename_image, resize_image, redirect_back, flash_errors
-from albumy.ml_utils import get_ml_tags
+from albumy.ml_utils import get_ml_tags, get_ml_descriptions
 
 main_bp = Blueprint('main', __name__)
 
@@ -127,7 +127,15 @@ def upload():
         filename_s = resize_image(f, filename, current_app.config['ALBUMY_PHOTO_SIZE']['small'])
         filename_m = resize_image(f, filename, current_app.config['ALBUMY_PHOTO_SIZE']['medium'])
 
+        # Get tags and description using ML model
+        try:
+            tags = get_ml_tags(os.path.join(current_app.config['ALBUMY_UPLOAD_PATH'], filename))
+            description = get_ml_descriptions(os.path.join(current_app.config['ALBUMY_UPLOAD_PATH'], filename))
+        except Exception as e:
+            print("tags",e)
+
         photo = Photo(
+            description=description,
             filename=filename,
             filename_s=filename_s,
             filename_m=filename_m,
@@ -136,11 +144,6 @@ def upload():
         db.session.add(photo)
         db.session.commit()
 
-        # Get tags using ML model
-        try:
-            tags = get_ml_tags(os.path.join(current_app.config['ALBUMY_UPLOAD_PATH'], filename))
-        except Exception as e:
-            print(e)
 
         # Adding tags to photo
         for tag_name in tags:

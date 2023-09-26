@@ -55,6 +55,8 @@ This project is licensed under the MIT License (see the
 - Have to run: pip install git+https://github.com/xinyu1205/recognize-anything.git
     - But requires rust to work, install using: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 - Running the code to install the pretrained model weights requires wget to be installed
+## installing hugging face transformers for description generation:
+- pip install git+https://github.com/huggingface/transformers
 ## How to test assignment 1 code:
 1.Activate the virtual environment
 2. Run `flask forge`

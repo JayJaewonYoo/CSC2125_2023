@@ -9,6 +9,8 @@ from ram import inference_ram
 from ram import inference_tag2text
 from ram import get_transform
 
+from transformers import AutoProcessor, AutoModelForCausalLM
+
 # Based on https://github.com/xinyu1205/recognize-anything/blob/main/inference_tag2text.py
 
 
@@ -71,3 +73,39 @@ def get_ml_tags(image_path, image_size=384, threshold=0.68, model_type='RAM'):
     # print("Tags: ", tags)
     
     return tags
+
+## fBAsed on https://huggingface.co/docs/transformers/main/model_doc/git#transformers.GitForCausalLM.forward.example
+
+def get_ml_descriptions(image_path, model_name="microsoft/git-base-coco"):
+    # If pretrained weights do not exist, download them:
+    cwd = os.getcwd()
+    pretrained_dir_path = os.path.join(cwd, 'albumy', 'pretrained')
+
+    if not os.path.exists(pretrained_dir_path):
+        os.mkdir(pretrained_dir_path)
+    processor_path = os.path.join(pretrained_dir_path, "processor_weights")
+    model_path = os.path.join(pretrained_dir_path, "model_weights")
+
+    if not os.path.exists(processor_path):
+        processor = AutoProcessor.from_pretrained("microsoft/git-base-coco")
+        processor.save_pretrained(processor_path)
+    else:
+        processor = AutoProcessor.from_pretrained(processor_path)
+
+    if not os.path.exists(model_path):
+        model = AutoModelForCausalLM.from_pretrained("microsoft/git-base-coco")
+        model.save_pretrained(model_path)
+    else:
+        model = AutoModelForCausalLM.from_pretrained(model_path)
+
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    model.to(device)
+
+    image = Image.open(image_path)
+
+    # generate image caption
+    pixel_values = processor(images=image, return_tensors="pt").pixel_values
+    generated_ids = model.generate(pixel_values=pixel_values, max_length=50)
+    generated_caption = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+    
+    return generated_caption
