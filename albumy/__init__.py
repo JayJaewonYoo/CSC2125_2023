@@ -20,7 +20,7 @@ from albumy.blueprints.user import user_bp
 from albumy.extensions import bootstrap, db, login_manager, mail, dropzone, moment, whooshee, avatars, csrf
 from albumy.models import Role, User, Photo, Tag, Follow, Notification, Comment, Collect, Permission
 from albumy.settings import config
-from albumy.ml_utils import initialize_tagging_model
+from albumy.ml_utils import initialize_tagging_model, initialize_description_model
 
 def create_app(config_name=None):
     if config_name is None:
@@ -41,9 +41,12 @@ def create_app(config_name=None):
         # Based on: https://stackoverflow.com/a/68007730
     with app.app_context():
         tag_model, tag_model_transformer, tag_model_type = initialize_tagging_model()
+        description_model, description_processor = initialize_description_model()
         current_app.config['tag_model'] = tag_model
         current_app.config['tag_model_transformer'] = tag_model_transformer
         current_app.config['tag_model_type'] = tag_model_type
+        current_app.config['description_model'] = description_model
+        current_app.config['description_processor'] = description_processor
 
     return app
 

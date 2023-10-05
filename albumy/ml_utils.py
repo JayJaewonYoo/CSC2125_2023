@@ -85,7 +85,7 @@ def get_ml_tags(image_path):
 
 ## fBAsed on https://huggingface.co/docs/transformers/main/model_doc/git#transformers.GitForCausalLM.forward.example
 
-def get_ml_descriptions(image_path, model_name="microsoft/git-base-coco"):
+def initialize_description_model(model_name="microsoft/git-base-coco"):
     # If pretrained weights do not exist, download them:
     cwd = os.getcwd()
     pretrained_dir_path = os.path.join(cwd, 'albumy', 'pretrained')
@@ -96,19 +96,26 @@ def get_ml_descriptions(image_path, model_name="microsoft/git-base-coco"):
     model_path = os.path.join(pretrained_dir_path, "model_weights")
 
     if not os.path.exists(processor_path):
-        processor = AutoProcessor.from_pretrained("microsoft/git-base-coco")
+        processor = AutoProcessor.from_pretrained(model_name)
         processor.save_pretrained(processor_path)
     else:
         processor = AutoProcessor.from_pretrained(processor_path)
 
     if not os.path.exists(model_path):
-        model = AutoModelForCausalLM.from_pretrained("microsoft/git-base-coco")
+        model = AutoModelForCausalLM.from_pretrained(model_name)
         model.save_pretrained(model_path)
     else:
         model = AutoModelForCausalLM.from_pretrained(model_path)
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model.to(device)
+
+    return model, processor
+
+def get_ml_descriptions(image_path):
+    
+    model = current_app.config['description_model']
+    processor = current_app.config['description_processor']
 
     image = Image.open(image_path)
 
