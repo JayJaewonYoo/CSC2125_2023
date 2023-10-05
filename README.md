@@ -39,6 +39,7 @@ install hugginface transformers for alt text generation:
 pip install git+https://github.com/huggingface/transformers
 ```
 - Note may have to use `--upgrade` to ensure that latest version is being used
+
 generate fake data then run:
 ```
 $ flask forge
