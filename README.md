@@ -28,19 +28,21 @@ or with Pipenv:
 $ pipenv install --dev
 $ pipenv shell
 ```
-install recognize-anything-model for image tagging (https://github.com/xinyu1205/recognize-anything), requires rust compiler and wget:
+install recognize-anything-model for image tagging (https://github.com/xinyu1205/recognize-anything), requires rust compiler:
 ```
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-brew install wget
 pip install git+https://github.com/xinyu1205/recognize-anything.git
 ```
-install hugginface transformers for alt text generation:
+- Note: need `wget` to download model weights.
+
+install huggingface transformers for alt text generation:
 ```
 pip install git+https://github.com/huggingface/transformers
 ```
-- Note may have to use `--upgrade` to ensure that latest version is being used
+- Note: may have to use `--upgrade` to ensure that latest version is being used
 
 generate fake data then run:
+- Note: first run will take longer to download model weights.
 ```
 $ flask forge
 $ flask run
